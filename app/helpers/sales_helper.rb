@@ -6,7 +6,7 @@ module SalesHelper
     end
 
     def list_route
-        sql = "SELECT CONCAT(CODIRUTA, ' - ', TRIM(NOMBVEND)) AS Route FROM truta"
+        sql = "SELECT CODIRUTA AS Route, CONCAT(CODIRUTA, ' - ', TRIM(NOMBVEND)) AS Name FROM truta"
         ActiveRecord::Base.connection.exec_query(sql)    
     end
 
