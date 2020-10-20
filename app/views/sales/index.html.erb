@@ -1,0 +1,17 @@
+<h2> Reporte Ventas 0 </h2>
+
+<div class="pure-g">
+    <%= form_with(url: "/sales/sales_cero", local: true, method: :post) do |f| %>
+
+        <%= f.label(:route, "Ruta") %>
+        <%= f.select(:route, list_route.collect { |r| [r["Route"]]}, { include_blank: 'Seleccionar un ruta' }) %>
+
+        <%= f.label(:from_date, "Desde") %>
+        <%= f.date_field(:from_date, value: Date.today.at_beginning_of_month, min: Date.today.at_beginning_of_month, max: Date.today) %>
+        
+        <%= f.label(:to_date, "Hasta") %>
+        <%= f.date_field(:to_date, value: Date.today, min: Date.today.at_beginning_of_month, max: Date.today) %>
+        
+        <%= f.submit("Buscar", data: { disable_with: false }) %>
+    <% end %>
+</div>
