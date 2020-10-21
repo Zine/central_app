@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'sales#index'
 
   resources :sales, only: [:index]
+  resources :inventory, only: [:index]
 
   post '/sales/sales_cero', to: 'sales#sales_cero'
 

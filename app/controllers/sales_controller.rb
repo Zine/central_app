@@ -22,6 +22,7 @@ class SalesController < ApplicationController
                 records.each do |r|
                     sheet.add_row [r['Codigo'], r['Cliente']], style: [only_border, only_border], :types => [:string, :string]
                 end
+                sheet.add_row ["Total", records.length], style: [text_bold, only_border]
             end
 
             xlsx.serialize("public/#{filename}")
