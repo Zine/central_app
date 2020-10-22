@@ -12,6 +12,6 @@
         <%= f.label(:to_date, "Hasta") %>
         <%= f.date_field(:to_date, value: Date.today, min: Date.today.at_beginning_of_month, max: Date.today) %>
         
-        <%= f.submit("Buscar", data: { disable_with: false }) %>
+        <%= f.submit("Generar", data: { disable_with: false }) %>
     <% end %>
 </div>

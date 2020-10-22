@@ -1,0 +1,7 @@
+<%= form_with(url: "/inventory/price", local: true, method: :post) do |f| %>
+
+    <%= f.label(:file, "Archivo") %>
+    <%= f.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %>
+    <%= f.submit("Cambiar", data: { disable_with: false }) %>
+
+<% end %>

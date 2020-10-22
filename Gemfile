@@ -54,4 +54,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Add controller to Excel
-gem 'caxlsx', '~> 3.0', '>= 3.0.1'
+gem 'caxlsx', '~> 3.0', '>= 3.0.2'
+gem 'caxlsx_rails', '~> 0.6.2'
+gem 'roo', '~> 2.8', '>= 2.8.3'

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :sales, only: [:index]
   resources :inventory, only: [:index]
 
+  get '/inventory/list_price', to: 'inventory#list_price'
   post '/sales/sales_cero', to: 'sales#sales_cero'
+  post '/inventory/price', to: 'inventory#price'
 
 end
