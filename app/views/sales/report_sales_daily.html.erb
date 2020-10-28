@@ -1,0 +1,10 @@
+<%= form_with(url: "/sales/report_sales_daily", local: true, method: :post) do |f| %>
+
+    <%= f.label(:from_date, "Desde") %>
+    <%= f.date_field(:from_date, value: Date.today.at_beginning_of_month, min: Date.today.at_beginning_of_month, max: Date.today) %>
+        
+    <%= f.label(:to_date, "Hasta") %>
+    <%= f.date_field(:to_date, value: Date.today, min: Date.today.at_beginning_of_month, max: Date.today) %>
+
+    <%= f.submit("Generar", data: { disable_with: false }) %>
+<% end %>

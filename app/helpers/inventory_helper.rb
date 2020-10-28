@@ -17,7 +17,7 @@ module InventoryHelper
         product.ULTICOST = hash[:cost].round(4)
         product.VENTLOT1 = hash[:base].round(4)
         product.VENT1ME = hash[:dolarv].round(2)
-        product.COST1ME = hash[:dolarc].round(2)
+        product.ULTCOSME = hash[:dolarc].round(2)
         product.VENTAA = calculate_base(hash[:cost], hash[:pricea]).round(6)
         product.VENTAB = calculate_base(hash[:cost], hash[:priceb]).round(6)
         product.VENTAC = calculate_base(hash[:cost], hash[:pricec]).round(6)

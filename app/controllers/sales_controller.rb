@@ -14,8 +14,8 @@ class SalesController < ApplicationController
         if records.length > 0
             xlsx = Axlsx::Package.new
 
-            text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, :font_name => 'Calibri')
-            only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, :font_name => 'Calibri')
+            text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+            only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
 
             xlsx.workbook.add_worksheet(name: "Ventas 0 - #{route}") do |sheet|
                 sheet.add_row ["Codigo", "Clientes"], style: [text_bold, text_bold]
@@ -28,6 +28,40 @@ class SalesController < ApplicationController
             xlsx.serialize("public/#{filename}")
             send_file "public/#{filename}"
         end
+    end
+
+    def report_sales_daily; end
+
+    def generate_report_sales_daily
+        begin
+            from_date, to_date = params[:from_date].gsub('-',''), params[:to_date].gsub('-','')
+            dates = get_dates_report_sales_daily(from_date, to_date)
+            filename = "Ventas_#{from_date}_#{to_date}.xlsx"
+            
+            if dates.length > 0
+                xlsx = Axlsx::Package.new
+
+                text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+                only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+                number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 2, font_name: 'Calibri')
+
+                dates.each do |date|
+                    xlsx.workbook.add_worksheet(name: date['FECHA'].gsub('/', '-')) do |sheet|
+                        records = get_documents_report_sales_daily(date['RDate'])
+                        sheet.add_row ['Fecha', 'Ruta', 'Tipo', 'Documento', 'Cliente', 'Cajas', 'Tasa', 'Subtotal', 'IVA', 'Total', 'Documento Afectado', 'Mensaje'], style: text_bold
+                        records.each do |r|
+                            sheet.add_row [r['Fecha'], r['Ruta'], r['Tipo'], r['Documento'], r['Cliente'], r['Cajas'], r['Tasa'], r['Subtotal'], r['IVA'], r['Total'], r['DocumentoAfectado'], r['Mensaje']], style: [only_border, only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, only_border, only_border], types: [:string, :string, :string, :string, :string, :float, :float, :float, :float, :float, :string, :string]
+                        end
+                    end
+                end
+            end
+
+            xlsx.serialize("public/#{filename}")
+            send_file "public/#{filename}"
+        ensure
+            ActiveRecord::Base.connection_pool.release_connection
+        end
+
     end
 
 end
