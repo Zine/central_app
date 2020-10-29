@@ -1,3 +1,12 @@
+<%= form_with(url: "/inventory/list_price", local: true, method: :post) do |f| %>
+
+    <%= f.label("", "Descargar lista de precio") %>
+    <%= f.submit("Descargar", data: { disable_with: false }) %>
+
+<% end %>
+
+</br>
+
 <%= form_with(url: "/inventory/list_price", local: true, method: :get) do |f| %>
 
     <%= f.label("", "Descargar archivo base") %>
