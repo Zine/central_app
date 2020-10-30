@@ -80,7 +80,7 @@ class InventoryController < ApplicationController
         filename = "Lista_#{d.day}_#{d.month}.xlsx"
 
         xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
-            sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'PRECIO', 'PRECIO (UND)', 'DOLAR', 'DOLAR (UND)', 'DOLAR (DES)', 'DOLAR (DES)(UND)'], style: header_bold
+            sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'PRECIO BS', 'PRECIO BS (UND)', 'DOLAR', 'DOLAR (UND)', 'DOLAR (EFEC)', 'DOLAR (EFEC)(UND)'], style: header_bold
             price_list_data.each do |d|
                 sheet.add_row [d['Codigo'], d['Producto'], d['Unidades'], d['PrecioBolivares'], d['PrecioBolivaresUnidades'], d['PrecioDolarFull'], d['PrecioDolarFullUnidades'], d['PrecioDolar'], d['PrecioDolarUnidades']], style: [only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :float, :float, :float, :float, :float, :float]
             end
