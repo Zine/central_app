@@ -1,17 +1,34 @@
-<h2> Reporte Ventas 0 </h2>
-
-<div class="pure-g">
-    <%= form_with(url: "/sales/sales_cero", local: true, method: :post) do |f| %>
-
-        <%= f.label(:route, "Ruta") %>
-        <%= f.select(:route, list_route.collect { |r| [  r["Name"], r["Route"]]}, { include_blank: 'Seleccionar un ruta' }) %>
-
-        <%= f.label(:from_date, "Desde") %>
-        <%= f.date_field(:from_date, value: Date.today.at_beginning_of_month, min: Date.today.at_beginning_of_month, max: Date.today) %>
-        
-        <%= f.label(:to_date, "Hasta") %>
-        <%= f.date_field(:to_date, value: Date.today, min: Date.today.at_beginning_of_month, max: Date.today) %>
-        
-        <%= f.submit("Generar", data: { disable_with: false }) %>
-    <% end %>
+<h2 class="title"> Reporte Ventas 0 </h2>
+<div class="columns is-centered">
+  <div class="column is-7">
+    <div class="card">
+      <div class="card-content">
+        <%= form_with(url: "/sales/sales_cero", local: true, method: :post) do |f| %>
+          <div class="field">
+            <%= f.label(:route, "Ruta", class: "label") %>
+            <%= f.select(:route, list_route.collect { |r| [  r["Name"], r["Route"]]}, { include_blank: 'Seleccionar un ruta' }, class: "input") %>
+          </div>
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <%= f.label(:from_date, "Desde", class: "label") %>
+                <%= f.date_field(:from_date, value: Date.today.at_beginning_of_month, min: Date.today.at_beginning_of_month, max: Date.today, class: "input") %>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field">
+                <%= f.label(:to_date, "Hasta" , class: "label") %>
+                <%= f.date_field(:to_date, value: Date.today, min: Date.today.at_beginning_of_month, max: Date.today, class: "input") %>
+              </div>
+            </div>
+          </div>
+          <div class="columns is-centered">
+            <div class="column" style="text-align: center;">
+              <%= f.submit("Generar", data: { disable_with: false }, class: "button is-text") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

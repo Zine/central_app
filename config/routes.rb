@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   resources :inventory, only: [:index]
 
   get '/sales/report_sales_daily', to: 'sales#report_sales_daily'
-  get '/inventory/list_price', to: 'inventory#load_list_price'
   get '/inventory/list_price_new', to: 'inventory#load_list_price_new' 
   get '/inventory/list_price', to: 'inventory#list_price' 
 

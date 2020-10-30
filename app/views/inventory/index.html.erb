@@ -1,34 +1,62 @@
-<%= form_with(url: "/inventory/list_price", local: true, method: :post) do |f| %>
-
-    <%= f.label("", "Descargar lista de precio") %>
-    <%= f.submit("Descargar", data: { disable_with: false }) %>
-
-<% end %>
-
-</br>
-
-<%= form_with(url: "/inventory/list_price", local: true, method: :get) do |f| %>
-
-    <%= f.label("", "Descargar archivo base") %>
-    <%= f.submit("Descargar", data: { disable_with: false }) %>
-
-<% end %>
-
-</br>
-
-<%= form_with(url: "/inventory/list_price_new", local: true, method: :get) do |f| %>
-
-    <strong><%= f.label("", "Descargar archivo base") %></strong>
-    <%= f.submit("Descargar", data: { disable_with: false }) %>
-
-<% end %>
-
-</br>
-
-<%= form_with(url: "/inventory/price", local: true, method: :post) do |f| %>
-
-    <%= f.label(:file, "Archivo") %>
-    <%= f.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %>
-    <%= f.submit("Cambiar", data: { disable_with: false }) %>
-
-<% end %>
+<h2 class="title">Inventario</h2>
+<div class="columns is-centered">
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <%= form_with(url: "/inventory/list_price", local: true, method: :post) do |f| %>
+          <div class="field">
+            <%= f.label("", "Descargar lista de precio", class: "label") %>
+            <div class="control">
+              <%= f.submit("Descargar", data: { disable_with: false }, class: "button is-text") %>
+            </div>
+          </div>
+        <% end %>
+      </br>
+    </div>
+  </div>
+</div>
+<div class="column">
+  <div class="card">
+    <div class="card-content">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Descargar plantilla</p>
+        </header>
+        <div class="card-content">
+          <%= form_with(url: "/inventory/list_price_new", local: true, method: :get) do |f| %>
+            <%= f.submit("Descargar", data: { disable_with: false }, class: "button is-text") %>
+          <% end %>
+        </div>
+      </div>
+    </br>
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">Cargar precios</p>
+      </header>
+      <div class="card-content">
+        <%= form_with(url: "/inventory/price", local: true, method: :post) do |f| %>
+          <div class="file has-name">
+            <label class="file-label">
+              <%= f.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", class: "file-input" %>
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose a file…
+                </span>
+              </span>
+              <span class="file-name">
+                Plantilla
+              </span>
+            </label>
+          </div>
+        </br>
+        <%= f.submit("Cargar Plantilla", data: { disable_with: false }, class: "button is-text") %>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>

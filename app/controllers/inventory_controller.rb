@@ -36,17 +36,19 @@ class InventoryController < ApplicationController
         only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', locked: false)
         text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
         only_border_locked = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', locked: true)
+        number_format_locked = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 2, font_name: 'Calibri', locked: true)
+        number_format_unlocked = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 2, font_name: 'Calibri', locked: false)
         text_bold_locked = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', locked: true)
 
         # xlsx.workbook.add_worksheet.
 
         xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
             sheet.sheet_protection.password = "central"
-            #                   A       B           C               D           E           F           G           H       I           J           K       L        M          N                   O
-            sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
+            #                   A       B           C               D           E           F           G           H       I           J           K       L        M        N             O                P
+            sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
             Product.where(DESACTIV: 0).all.each_with_index do |p, i|
                 c = i + 2
-                sheet.add_row [p['CODIPROD'], p['DESCPROD'], "=L#{c}*M#{c}", "=L#{c}*M#{c}", "=N#{c}", "=M#{c}", "=N#{c}*L#{c}", "=O#{c}*L#{c}", "=N#{c}*L#{c}", "=N#{c}*L#{c}", "=N#{c}*L#{c}", '', '' ,'', ''], style: [only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border_locked, only_border, only_border, only_border, only_border, only_border], types: [:string]
+                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'], "=L#{c}*M#{c}", "=L#{c}*M#{c}", "=O#{c}", "=M#{c}", "=O#{c}*L#{c}", "=P#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", '', p['ULTCOSME'], '', p['IMPU1'] == 16.0 ? "=((M#{c}/(1-N#{c}))/.95)*1.16" : "=(M#{c}/(1-N#{c}))/.95", "=((M#{c}/(1-N#{c}))/.95)"], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
             end
         end
 
