@@ -23,6 +23,7 @@ module InventoryHelper
         product = Product.find_by(CODIPROD: hash[:code])
         product.ULTICOST = hash[:cost].round(4)
         product.COSPROM1 =  hash[:cost].round(4)
+        product.COSTLOT1 =  hash[:cost].round(4)
         product.VENTLOT1 = hash[:base].round(4)
         product.VENT1ME = hash[:dolarv].round(2)
         product.ULTCOSME = hash[:dolarc].round(2)
