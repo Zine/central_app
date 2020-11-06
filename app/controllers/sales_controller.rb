@@ -61,7 +61,36 @@ class SalesController < ApplicationController
         ensure
             ActiveRecord::Base.connection_pool.release_connection
         end
-
     end
 
+    def sku_view; end
+
+    def sku
+        begin
+            xlsx = Axlsx::Package.new
+
+            header_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', alignment: { horizontal: :center })
+            only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+            text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+            number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 4, font_name: 'Calibri')
+
+            from_date, to_date = params[:from_date], params[:to_date]
+        
+            filename = "SKU_Comision_#{from_date}_#{to_date}.xlsx"
+
+            query = "CALL ventas_concurso_1('#{from_date}', '#{to_date}')"
+            results = ActiveRecord::Base.connection.execute(query)
+
+            xlsx.workbook.add_worksheet(name: "Ventas") do |sheet|
+                sheet.add_row ['Ruta', 'Codigo', 'Producto', 'Comision', 'Cajas', 'Precio Total'], style: header_bold
+                results.each {|r| sheet.add_row r, style: [only_border, only_border, only_border, only_border, only_border, number_format], types: [:string, :string] }
+            end
+        
+            xlsx.serialize("public/#{filename}")
+            send_file "public/#{filename}"
+        ensure
+            ActiveRecord::Base.connection_pool.release_connection
+        end
+    end
+    
 end

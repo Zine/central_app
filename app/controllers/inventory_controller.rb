@@ -93,5 +93,4 @@ class InventoryController < ApplicationController
         xlsx.serialize("public/#{filename}")
         send_file "public/#{filename}"
     end
-
 end

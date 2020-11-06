@@ -1,0 +1,30 @@
+<h2 class="title"> SKU Comision </h2>
+<div class="columns is-centered">
+  <div class="column is-7">
+    <div class="card">
+      <div class="card-content">
+        <%= form_with(url: "/sales/sku", local: true, method: :post) do |f| %>
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <%= f.label(:from_date, "Desde", class: "label") %>
+                <%= f.date_field(:from_date, value: Date.today.at_beginning_of_month, max: Date.today, class: "input") %>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field">
+                <%= f.label(:to_date, "Hasta" , class: "label") %>
+                <%= f.date_field(:to_date, value: Date.today, max: Date.today, class: "input") %>
+              </div>
+            </div>
+          </div>
+          <div class="columns is-centered">
+            <div class="column" style="text-align: center;">
+              <%= f.submit("Generar", data: { disable_with: false }, class: "button is-text") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
