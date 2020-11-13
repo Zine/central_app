@@ -92,5 +92,25 @@ class SalesController < ApplicationController
             ActiveRecord::Base.connection_pool.release_connection
         end
     end
+
+    def enjabonate_xlsx
+        begin
+            xlsx = Axlsx::Package.new
+
+            header_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', alignment: { horizontal: :center })
+            only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+            text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+            number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 4, font_name: 'Calibri')
+
+            filename = "Enjabonate.xlsx"
+
+            results = 
+
+            xlsx.workbook.add_worksheet(name: "Enjabonate") do |sheet|
+                sheet.add_row ['Codigo', 'Cliente', 'Factura', 'Fecha Factura', 'Fecha Vencimiento', 'Cajas'], style: header_bold
+                results.each { |r| sheet.add_row  }
+            end
+        end
+    end
     
 end

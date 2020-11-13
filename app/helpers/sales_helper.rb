@@ -22,4 +22,11 @@ module SalesHelper
         records
     end
 
+    def get_data_enjabonate
+        sql = "CALL enjabonate()"
+        records = ActiveRecord::Base.connection.execute(sql)
+        ActiveRecord::Base.clear_active_connections!
+        records
+    end
+
 end

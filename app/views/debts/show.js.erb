@@ -1,0 +1,26 @@
+message = document.getElementById('message');
+<% if @records.length > 1 %>
+  message.innerHTML = `
+  <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, le recuerda que debe realizar el pago de las siguientes facturas:
+</br></br>
+<% @records.each do |r| %>
+  <strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] > 2 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
+<% if r['FechaDiff'] > 2 && r['FechaDiff'] <= 5  %>
+  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+<% end %>
+<% end %>
+Gracias por su atención.
+`;
+<% else %>
+  <% @records.each do |r| %>
+    message.innerHTML = `
+    <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, 
+    le recuerda que debe realizar el pago de la siguiente factura: </br></br>
+<strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 2 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
+<% if r['FechaDiff'] > 2 && r['FechaDiff'] <= 5  %>
+  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+<% end %>
+Gracias por su atención.
+`;
+<% end %>
+<% end %>

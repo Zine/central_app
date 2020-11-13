@@ -1,0 +1,26 @@
+<h2 class="title">Mensaje clientes</h2>
+<div class="columns">
+  <div class="column is-3">
+    <%= form_with(url: '/debts', method: :post, remote: true) do |f| %>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <%= f.text_field(:code, class: 'input', placeholder: 'Codigo')%>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <%= f.submit('Buscar', class: "button is-text")%>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="column is-5">
+    <div class="card">
+      <div class="card-content">
+        <div id="message"></div>
+      </div>
+    </div>
+  </div>
+</div>
