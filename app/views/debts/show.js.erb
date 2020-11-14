@@ -1,3 +1,7 @@
+client = document.getElementById('title');
+<% @client.each do |r| %>
+  client.innerHTML = `<%= escape_javascript(r['CODICLIE']) %> - <%= escape_javascript(r['RAZOSOCI']) %>`;
+<% end %>
 message = document.getElementById('message');
 <% if @records.length > 1 %>
   message.innerHTML = `
@@ -25,4 +29,8 @@ Gracias por su atención.
 Gracias por su atención.
 `;
 <% end %>
+<% end %>
+contacts = document.getElementById('contacts');
+<% @client.each do |r| %>
+  contacts.innerHTML = `Telefono 1: <%= escape_javascript(r['TELEFONO1']) %> </br> Telefono 2: <%= escape_javascript(r['TELEFONO2']) %> </br> Telefono 3: <%= escape_javascript(r['TELEFONO3']) %>`;
 <% end %>
