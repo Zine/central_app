@@ -11,6 +11,8 @@ message = document.getElementById('message');
 <% end %>
 Gracias por su atención.
 `;
+<% elsif @records.length == 0 %>
+  message.innerHTML = 'No posee deudas';
 <% else %>
   <% @records.each do |r| %>
     message.innerHTML = `
