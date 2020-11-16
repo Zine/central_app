@@ -1,0 +1,14 @@
+<h2 class="title">Reporte de cobranzas</h2>
+<div class="columns">
+  <div class="column is-3">
+    <%= form_with(url: '/debts/report', method: :post, local: true) do |f| %>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <%= f.submit('Descargar', data: { disable_with: false }, class: "button is-text")%>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

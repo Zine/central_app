@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get '/inventory/list_price_new', to: 'inventory#load_list_price_new' 
   get '/inventory/list_price', to: 'inventory#list_price' 
   get '/sales/sku', to: 'sales#sku_view'
+  get '/debts/report', to: 'debts#report_debts'
 
   post '/sales/report_sales_daily', to: 'sales#generate_report_sales_daily'
   post '/sales/sales_cero', to: 'sales#sales_cero'
@@ -18,5 +19,6 @@ Rails.application.routes.draw do
   post '/inventory/price', to: 'inventory#price'
   post '/inventory/list_price', to: 'inventory#list_price_xlsx'
   post '/debts', to: 'debts#show'
+  post '/debts/report', to: 'debts#generate_report_debts'
 
 end
