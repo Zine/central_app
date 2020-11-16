@@ -8,9 +8,10 @@ message = document.getElementById('message');
   <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, le recuerda que debe realizar el pago de las siguientes facturas:
 </br></br>
 <% @records.each do |r| %>
-  <strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] > 2 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
-<% if r['FechaDiff'] > 2 && r['FechaDiff'] <= 5  %>
-  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+  <strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
+<% if r['FechaDiff'] >= 3 && r['FechaDiff'] <= 5  %>
+  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor (@monitordolar_vzla2.0)</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+https://www.instagram.com/monitordolar_vzla2.0/ </br></br>
 <% end %>
 <% end %>
 Gracias por su atención.
@@ -22,15 +23,20 @@ Gracias por su atención.
     message.innerHTML = `
     <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, 
     le recuerda que debe realizar el pago de la siguiente factura: </br></br>
-<strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 2 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
-<% if r['FechaDiff'] > 2 && r['FechaDiff'] <= 5  %>
-  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+<% puts r['FechaDiff'] %>
+<strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
+<% if r['FechaDiff'] >= 2 && r['FechaDiff'] <= 5  %>
+  Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor (@monitordolar_vzla2.0)</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
+https://www.instagram.com/monitordolar_vzla2.0/ </br></br>
 <% end %>
 Gracias por su atención.
 `;
 <% end %>
 <% end %>
 contacts = document.getElementById('contacts');
-<% @client.each do |r| %>
-  contacts.innerHTML = `Telefono 1: <%= escape_javascript(r['TELEFONO1']) %> </br> Telefono 2: <%= escape_javascript(r['TELEFONO2']) %> </br> Telefono 3: <%= escape_javascript(r['TELEFONO3']) %>`;
+<% @client.each_with_index do |r,| %>
+  contacts.innerHTML = `
+  Telefono 1: <a href="https://wa.me/58<%= escape_javascript(r['TELEFONO1']).gsub('-','') %>?text=${encodeURI(message.textContent)}" target="_blank" id="whatsapp-1"><%= escape_javascript(r['TELEFONO1']) %></a> </br>
+Telefono 2: <a href="https://wa.me/58<%= escape_javascript(r['TELEFONO2']).gsub('-','') %>?text=${encodeURI(message.textContent)}" target="_blank" id="whatsapp-2"><%= escape_javascript(r['TELEFONO2']) %></a> </br>
+Telefono 3: <a href="https://wa.me/58<%= escape_javascript(r['TELEFONO3']).gsub('-','') %>?text=${encodeURI(message.textContent)}" target="_blank" id="whatsapp-3"><%= escape_javascript(r['TELEFONO3']) %></a>`;
 <% end %>
