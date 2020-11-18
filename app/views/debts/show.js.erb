@@ -8,7 +8,7 @@ message = document.getElementById('message');
   <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, le recuerda que debe realizar el pago de las siguientes facturas:
 </br></br>
 <% @records.each do |r| %>
-  <strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
+  <strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %>  <%= r['FechaDiff'] > 5 ? "(Dolares efectivo)" : "" %></strong> </br></br>
 <% if r['FechaDiff'] >= 3 && r['FechaDiff'] <= 5  %>
   Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor (@monitordolar_vzla2.0)</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
 https://www.instagram.com/monitordolar_vzla2.0/ </br></br>
@@ -24,8 +24,8 @@ Gracias por su atención.
     <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, 
     le recuerda que debe realizar el pago de la siguiente factura: </br></br>
 <% puts r['FechaDiff'] %>
-<strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %></strong> </br></br>
-<% if r['FechaDiff'] >= 2 && r['FechaDiff'] <= 5  %>
+<strong><%= escape_javascript(r['Numero'])%></strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong><%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %> <%= r['FechaDiff'] > 5 ? "(Dolares efectivo)" : "" %> </strong> </br></br>
+<% if r['FechaDiff'] >= 3 && r['FechaDiff'] <= 5  %>
   Su fecha limite de pago en bolívares a la <a href="https://www.instagram.com/monitordolar_vzla2.0/">Tasa Monitor (@monitordolar_vzla2.0)</a> del día es <strong><%= r['FechaMax'] %></strong>. </br></br>
 https://www.instagram.com/monitordolar_vzla2.0/ </br></br>
 <% end %>
