@@ -1,0 +1,27 @@
+<h2 class="title">Ingresar</h1>
+<div class="columns is-centered">
+  <div class="column is-5">
+    <div class="card">
+      <div class="card-content">
+        <% if flash[:error] %>
+          <div class="notification is-danger">
+            <%= flash[:error] %>
+          </div>
+        <% end %>
+        <%= form_with(url: '/auth/login', method: :post, local: true) do |f| %>
+          <div class="field">
+            <%= f.label(:username, "Usuario", class: "label") %>
+            <%= f.text_field(:username, placeholder: "Nombre de usuario", class: "input") %>
+          </div>
+          <div class="field">
+            <%= f.label(:password, "Contraseña", class: "label") %>
+            <%= f.password_field(:password, placeholder: "Contraseña", class: "input") %>
+          </div>
+          <div class="field" style="text-align: center;">
+            <%= f.submit("Ingresar", class: "button is-text") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

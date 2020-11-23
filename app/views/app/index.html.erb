@@ -1,0 +1,21 @@
+<% if flash[:success] %>
+  <div class="notification is-success">
+    <%= flash[:success] %>
+  </div>
+<% end %>
+<div class="columns">
+  <div class="column is-2">
+    <div class="card">
+      <div class="card-content">
+        <%= render template: "layouts/menu.html" %>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <p>Prueba</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<% if flash[:success] %>
+  <div class="notification is-success">
+    <%= flash[:success] %>
+  </div>
+<% end %>
+<div class="columns">
+  <div class="column is-2">
+    <div class="card">
+      <div class="card-content">
+        <%= render template: "layouts/menu.html" %>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div>
+      <div class="columsn">
+        <%= form_with(url: '/app/orders', method: :post, local: false) do |f| %>
+          <div class="column">
+            <div class="field">
+              <%= f.submit("Obtener", class: "button is-text") %>
+            </div>
+          </div>
+        <% end %>
+        <div>
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Ruta</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="target-table">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

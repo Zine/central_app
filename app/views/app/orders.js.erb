@@ -1,0 +1,15 @@
+var table = $('#target-table');
+table.html('');
+var data = JSON.parse(decodeURI("<%= escape_javascript(@res) %>"))
+data.forEach((v) => appendTableChild(v));
+function appendTableChild(item) {
+table.append(`
+<tr>
+  <td>${item['document']}</td>
+  <td>${item['code']}</td>
+  <td>${item['name']}</td>
+  <td>${item['route']}</td>
+  <td>${item['createDate']}</td>
+</tr>
+`);
+}
