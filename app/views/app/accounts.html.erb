@@ -12,5 +12,14 @@
     </div>
   </div>
   <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <%= form_with(url: '/app/accounts', method: :post, local: true) do |f| %>
+          <div class="field">
+            <%= f.submit('Actualizar', class: "button is-text") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

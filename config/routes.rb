@@ -16,8 +16,11 @@ Rails.application.routes.draw do
   get '/debts/report', to: 'debts#report_debts'
 
   get '/app/clients', to: 'app#clients'
+  post '/app/clients', to: 'app#clients'
   get '/app/products', to: 'app#products'
+  post '/app/products', to: 'app#products'
   get '/app/accounts', to: "app#accounts"
+  post '/app/accounts', to: "app#accounts"
   get '/app/orders', to: 'app#orders'
   post '/app/orders', to: 'app#orders'
 

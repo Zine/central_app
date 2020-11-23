@@ -9,7 +9,7 @@ class AppController < ApplicationController
         @active_clients = 'is-active'   
         if request.post?
             res = get_response(URI('http://192.168.0.252/ventor/clients'))
-            get_response(API_URL[0], 'post', res.to_json)
+            get_response(API_URL[0], 'post', res)
         end
     end
 
@@ -17,7 +17,7 @@ class AppController < ApplicationController
         @active_products = 'is-active'
         if request.post?
             res = get_response(URI('http://192.168.0.252/ventor/products'))
-            get_response(API_URL[1], 'post', res.to_json)
+            get_response(API_URL[1], 'post', res)
         end
     end
 
@@ -25,7 +25,7 @@ class AppController < ApplicationController
         @active_accounts = 'is-active'
         if request.post?
             res = get_response(URI('http://192.168.0.252/ventor/accounts/pendings'))
-            get_response(API_URL[8], 'post', res.to_json)       
+            get_response(API_URL[8], 'post', res)       
         end
     end
 
