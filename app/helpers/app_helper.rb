@@ -10,6 +10,8 @@ module AppHelper
         '/api/rates',
         '/auth/login',
         '/auth/register',
+        '/api/accounts/pendings',
+        '/api/accounts/histories'
     ]
 
     def get_response(url, method = 'get', data = nil)

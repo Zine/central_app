@@ -23,6 +23,10 @@ class AppController < ApplicationController
 
     def accounts
         @active_accounts = 'is-active'
+        if request.post?
+            res = get_response(URI('http://192.168.0.252/ventor/accounts/pendings'))
+            get_response(API_URL[8], 'post', res.to_json)       
+        end
     end
 
     def orders
