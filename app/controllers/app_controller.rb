@@ -17,7 +17,7 @@ class AppController < ApplicationController
         @active_products = 'is-active'
         if request.post?
             res = Net::HTTP.get(URI('http://192.168.0.252/ventor/products'))
-            get_response(API_URL[1], 'post', res)
+            puts get_response(API_URL[1], 'post', res).inspect
         end
     end
 

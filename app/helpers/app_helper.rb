@@ -30,6 +30,7 @@ module AppHelper
             Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
                 request = Net::HTTP::Post.new uri
                 request.add_field("Content-Type", "application/json")
+                request.add_field("Authorization", "Bearer #{api_token}")
                 request.body = data
                 response = http.request request
             end
