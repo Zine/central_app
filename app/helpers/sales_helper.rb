@@ -108,7 +108,11 @@ module SalesHelper
       CAST((tcpcb.MONTO / tcpcb.CAMBIO) AS DECIMAL (10,2)) AS total,
       CAST((tcpcb.SALDO / tcpcb.CAMBIO) AS DECIMAL (10,2)) AS monto,
       DATE_FORMAT(tcpcb.FECHA, '%d/%m/%Y') AS FechaFac,
-      DATE_FORMAT(tcpcb.FECHACGS, '%d/%m/%Y') AS FechaEnt
+      IF(
+			DATE_FORMAT( tcpcb.FECHACGS, '%d/%m/%Y' ) = '00/00/0000',
+			'No entregado',
+			DATE_FORMAT(tcpcb.FECHACGS, '%d/%m/%Y')
+		) AS FechaEnt
     FROM tcpcb
     WHERE tcpcb.CODICLIE = '#{_code}' AND tcpcb.TIPODOCU = 'FA'
     "
