@@ -1,0 +1,43 @@
+<h2 class="title">Itinerario de Venta</h1>
+<div class="columns is-centered">
+  <div class="column is-4">
+    <div class="card">
+      <div class="card-content">
+        <%= form_with(url: '/sales/routine', method: :get, local: true) do |f| %>
+          <%= hidden_field_tag :format, :pdf %>
+          <div class="field">
+            <%= f.label(:route, "Ruta", class: "label") %>
+            <%= f.select(:route, list_route.collect { |r| [  r["Name"], r["Route"]]}, { include_blank: 'Seleccionar un ruta' }, class: "input") %>
+          </div>
+          <div class="field">
+            <%= f.label(:day, "Dia de Visita", class: "label") %>
+            <%= f.select(:day, list_days.map { |d| [d[:name], d[:id]] }, {include_blank: "Seleccionar dia"}, class: "input" ) %>
+          </div>
+          <div class="field" style="text-align: center;">
+            <%= f.submit("Descargar", class: "button is-text", disabled: true, data: { disable_with: false }, id: "submit", formtarget: "_blank") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <script>
+    const submit = $('#submit');
+    const select_day = $('#day');
+    const select_route = $('#route');
+    const selected_options = ["", ""];
+    $('select').on('change', (v) => verifyOptions());
+    
+    function verifyOptions() {
+      selected_options[0] = select_day.val();
+      selected_options[1] = select_route.val();
+    
+      if (selected_options.every((a) => a != '')) {
+        submit.prop('disabled', false);
+      } else {
+        submit.prop('disabled', true);
+        }
+    }
+    
+    selected_options
+  </script>
+</div>

@@ -28,6 +28,9 @@ Rails.application.routes.draw do
   post '/auth/register', to: 'auth#register'
   post '/auth/login', to: 'auth#login'
 
+  get '/sales/routine', to: 'sales#routine'
+  get '/sales/routine/:route/:day', to: 'sales#routine'
+  post '/sales/routine', to: 'sales#routine'
   post '/sales/report_sales_daily', to: 'sales#generate_report_sales_daily'
   post '/sales/sales_cero', to: 'sales#sales_cero'
   post '/sales/sku', to: 'sales#sku'

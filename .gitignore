@@ -35,3 +35,8 @@
 yarn-debug.log*
 .yarn-integrity
 /public/*.xlsx
+
+# Other files
+Listado.pdf
+public/Listado.pdf
+listodo.pdf

@@ -31,7 +31,20 @@ class AppController < ApplicationController
 
     def orders
         if request.post?
+            res = get_response(API_URL[3]).body
             @res = URI.encode(get_response(API_URL[3]).body)
+
+            json = JSON.parse res
+            
+            begin
+                json.each do |j|
+                    if j['syncVentor'] != true
+                        j['syncVentor'] = true
+                        insert_order_a(j)
+                    end
+                end
+            end 
+            
             respond_to do |format|
                 format.js 
             end

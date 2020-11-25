@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PDFs - Ruby on Rails</title>
+    <%= wicked_pdf_stylesheet_link_tag "pdf" %>
+    <%= wicked_pdf_stylesheet_pack_tag "bootstrap" %>
+  </head>
+  <body>
+    <div class="d-table">
+      <%= image_tag(wicked_pdf_asset_base64('logo_central_horizontal.png'), {style: "width: 25%"}) %>
+      <div class="d-table">
+        <span>Distribuidora Central de Alimentos Paraguana, C.A</span> <br>
+        <span>J410114452</span>
+      </div>
+    </div>
+    <%= yield %>
+  </body>
+</html>

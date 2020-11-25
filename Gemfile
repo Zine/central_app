@@ -30,7 +30,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
 end
 
 group :development do
@@ -51,12 +51,15 @@ group :test do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Add Excel
 gem 'caxlsx', '~> 3.0', '>= 3.0.2'
 gem 'caxlsx_rails', '~> 0.6.2'
 gem 'roo', '~> 2.8', '>= 2.8.3'
 
-# Add PDF 
-gem 'wicked_pdf', '~> 2.1'
+# Add PDF
+# gem 'wicked_pdf', '~> 2.1'
+# gem 'hexapdf', '~> 0.13.0'
+# gem 'prawn', '~> 2.3'
+gem 'prawn-rails', '~> 1.3'

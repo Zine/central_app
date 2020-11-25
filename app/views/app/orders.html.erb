@@ -39,4 +39,57 @@
       </div>
     </div>
   </div>
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Productos</p>
+      </header>
+      <section class="modal-card-body">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Precio</th>
+              <th>PrecioME</th>
+            </tr>
+          </thead>
+          <tbody id="target-body-dialog">
+          </tbody>
+        </table>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button" onclick="toggleModal()">Cerrar</button>
+      </footer>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="toggleModal()" ></button>
+  </div>
 </div>
+<script>
+  function toggleModal(document) {
+    const modal = $('.modal');
+    modal.toggleClass('is-active');
+    if (modal.hasClass('is-active')) {
+      $('#target-body-dialog').html('');
+      const json = $(`td#${document}`).text();
+      const data = JSON.parse(json);
+      console.log(data);
+      data.forEach((v) => itemTableProduct(v));
+    }
+  }
+  
+  function itemTableProduct(item) {
+    const table = $('#target-body-dialog');
+    table.append(`
+      <tr>
+        <td>${item['code']}</td>
+        <td>${item['name']}</td>
+        <td>${item['stock']}</td>
+        <td>${item['price'] * item['stock']}</td>
+        <td>${item['priceME'] * item['stock']}</td>
+      </tr>
+    `);
+  }
+</script>
