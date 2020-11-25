@@ -1,5 +1,5 @@
 pdf = Prawn::Document.new
-image = '/home/zine/Devel/Ruby/central_app/app/assets/images/logo_central_horizontal.png'
+image = Rails.root.join('app', 'assets', 'images', 'logo_central_horizontal.png')
 enteprise_data = '<b>DISTRIBUIDORA CENTRAL DE ALIMENTOS PARAGUANA C.A</b><br><font size="11">J410114452</font>'
 route = params[:route].to_s
 day = params[:day].to_i
