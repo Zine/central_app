@@ -20,12 +20,13 @@ module InventoryHelper
     end
 
     def change_price(hash)
-        product = Product.find_by(CODIPROD: hash[:code])
+        product = Product.find_by(CODIPROD: hash[:code].to_s)
         product.ULTICOST = hash[:cost].round(4)
-        product.COSPROM1 =  hash[:cost].round(4)
+        product.COSPROM1 = hash[:cost].round(4)
         product.COSTLOT1 =  hash[:cost].round(4)
         product.VENTLOT1 = hash[:base].round(4)
         product.VENT1ME = hash[:dolarv].round(2)
+        product.COST1ME = hash[:dolarc].round(2)
         product.ULTCOSME = hash[:dolarc].round(2)
         product.VENTAA = calculate_base(hash[:cost], hash[:pricea]).round(6)
         product.VENTAB = calculate_base(hash[:cost], hash[:priceb]).round(6)
@@ -43,7 +44,11 @@ module InventoryHelper
         product.VENTACP = hash[:pricec].round(4)
         product.VENTADP = hash[:priced].round(4)
         product.VENTAEP = hash[:pricee].round(4)
-        product.save
+        if product.save
+            puts "#{product.DESCPROD} guardado"
+        else
+            puts "#{product.DESCPROD} no guardado"
+        end
     end
 
 end
