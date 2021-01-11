@@ -5,7 +5,7 @@ client = document.getElementById('title');
 message = document.getElementById('message');
 <% if @records.length > 1 %>
   message.innerHTML = `
-  <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, les desea una feliz navidad y le recuerda que debe realizar el pago de las siguientes facturas:
+  <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, le recuerda que debe realizar el pago de las siguientes facturas:
 </br></br>
 <% @records.each do |r| %>
   <strong>*<%= escape_javascript(r['Numero'])%>*</strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong>*<%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %><%= r['FechaDiff'] > 5 ? "(Dolares efectivo)" : "" %>*</strong> </br></br>
@@ -21,8 +21,7 @@ Gracias por su atención.
 <% else %>
   <% @records.each do |r| %>
     message.innerHTML = `
-    <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, les desea una feliz navidad y  
-    le recuerda que debe realizar el pago de la siguiente factura: </br></br>
+    <strong>Distribuidora Central de Alimentos Paraguaná C.A.</strong>, le recuerda que debe realizar el pago de la siguiente factura: </br></br>
 <% puts r['FechaDiff'] %>
 <strong>*<%= escape_javascript(r['Numero'])%>*</strong> - Despachada día: <strong><%= escape_javascript(r['Fecha']) %></strong> - <strong>*<%= r['FechaDiff'] >= 3 ? escape_javascript(number_to_currency(r['Monto'], unit: '$ ')) : escape_javascript(number_to_currency(r['Monto'], unit: 'Bs '))  %><%= r['FechaDiff'] > 5 ? "(Dolares efectivo)" : "" %>*</strong> </br></br>
 <% if r['FechaDiff'] >= 3 && r['FechaDiff'] <= 5  %>
