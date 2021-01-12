@@ -48,7 +48,7 @@ class InventoryController < ApplicationController
             sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
             Product.where(DESACTIV: 0).all.each_with_index do |p, i|
                 c = i + 2
-                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'], "=L#{c}*M#{c}", "=L#{c}*M#{c}", "=O#{c}", "=M#{c}", "=O#{c}*L#{c}", "=P#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", '', p['ULTCOSME'], '', p['IMPU1'] == 16.0 ? "=ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
+                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'], "=L#{c}*M#{c}", "=L#{c}*M#{c}", "=O#{c}", "=M#{c}", "=O#{c}*L#{c}", "=P#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", '', p['ULTCOSME'], '', p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
             end
         end
 
@@ -64,6 +64,29 @@ class InventoryController < ApplicationController
                 change_price(h)
             end
         end
+    end
+
+    def test_price; end
+
+    def test_price_xlsx
+        xlsx = Axlsx::Package.new
+
+        only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 2, font_name: 'Calibri')
+
+
+        xlsx.workbook.add_worksheet(name: "Probador") do |sheet|
+            #                  A        B         C        D          E        F       G         H           I
+            sheet.add_row ['CODIGO', 'NOMBRE', 'TASA', 'UTILIDAD', 'COSTO', 'ME A', 'ME B', 'PRECIO A', 'PRECIO B',], style: text_bold
+            Product.where(DESACTIV: 0).all.each_with_index do |p, i|
+                c = i + 2
+                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'].strip, '', p['MARGENKG'], p['ULTCOSME'], p['IMPU1'] == 16.0 ? "=IFERROR(ROUND(ROUND((((E#{c}/((1-(D#{c}/100))))/.95)), 2)*1.16, 2), 0)" : "=IFERROR(ROUND(((E#{c}/((1-(D#{c}/100))))/.95), 2), 0)", "=IFERROR(ROUND(((E#{c}/((1-(D#{c}/100))))/.95), 2), 0)", "=C#{c}*F#{c}", "=C#{c}*G#{c}" ], style: [ only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
+            end
+        end
+
+        xlsx.serialize("public/ProbadorPrecio.xlsx")
+        send_file "public/ProbadorPrecio.xlsx"
     end
 
     def list_price

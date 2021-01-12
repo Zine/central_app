@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   resources :auth, only: [:index]
 
   get '/sales/report_sales_daily', to: 'sales#report_sales_daily'
-  get '/inventory/list_price_new', to: 'inventory#load_list_price_new' 
-  get '/inventory/list_price', to: 'inventory#list_price' 
+  get '/inventory/list_price_new', to: 'inventory#load_list_price_new'
+  get '/inventory/list_price', to: 'inventory#list_price'
+  get '/inventory/test_price', to: 'inventory#test_price_xlsx'
   get '/sales/sku', to: 'sales#sku_view'
   get '/debts/report', to: 'debts#report_debts'
 
@@ -19,8 +20,8 @@ Rails.application.routes.draw do
   post '/app/clients', to: 'app#clients'
   get '/app/products', to: 'app#products'
   post '/app/products', to: 'app#products'
-  get '/app/accounts', to: "app#accounts"
-  post '/app/accounts', to: "app#accounts"
+  get '/app/accounts', to: 'app#accounts'
+  post '/app/accounts', to: 'app#accounts'
   get '/app/orders', to: 'app#orders'
   post '/app/orders', to: 'app#orders'
 
@@ -38,5 +39,4 @@ Rails.application.routes.draw do
   post '/inventory/list_price', to: 'inventory#list_price_xlsx'
   post '/debts', to: 'debts#show'
   post '/debts/report', to: 'debts#generate_report_debts'
-
 end

@@ -26,6 +26,9 @@
           <%= form_with(url: "/inventory/list_price_new", local: true, method: :get) do |f| %>
             <%= f.submit("Descargar", data: { disable_with: false }, class: "button is-text") %>
           <% end %>
+          <%= form_with(url: "/inventory/test_price", local: true, method: :get) do |f| %>
+            <%= f.submit("Probador de Precios", data: { disable_with: false }, class: "button is-text") %>
+          <% end %>
         </div>
       </div>
     </br>
