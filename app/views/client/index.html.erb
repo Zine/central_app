@@ -1,0 +1,32 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>CODIGO</th>
+      <th>DIRECCION</th>
+      <th>NOMBRE</th>
+      <th>CIUDAD</th>
+      <th>TELEFONO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @clients.each do |client| %>
+      <tr>
+        <td>
+          <%= client['CODICLIE'] %>
+        </td>
+        <td>
+          <%= client['DIRECCION1'] %>
+        </td>
+        <td>
+          <%= client['RAZOSOCI'] %>
+        </td>
+        <td>
+          <%= client['CODICIUD'] %>
+        </td>
+        <td>
+          <%= client['TELEFONO1'] %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

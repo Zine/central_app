@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   get '/inventory/test_price', to: 'inventory#test_price_xlsx'
   get '/sales/sku', to: 'sales#sku_view'
   get '/debts/report', to: 'debts#report_debts'
+  get '/clients', to: 'client#index'
+  get '/client/:id', to: 'client#show'
+
+  get '/test', to:'inventory#list_price_auto'
 
   get '/app/clients', to: 'app#clients'
   post '/app/clients', to: 'app#clients'

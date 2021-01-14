@@ -48,7 +48,49 @@ class InventoryController < ApplicationController
             sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
             Product.where(DESACTIV: 0).all.each_with_index do |p, i|
                 c = i + 2
-                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'], "=L#{c}*M#{c}", "=L#{c}*M#{c}", "=O#{c}", "=M#{c}", "=O#{c}*L#{c}", "=P#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", "=O#{c}*L#{c}", '', p['ULTCOSME'], '', p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
+                sheet.add_row [
+                    p['CODIPROD'].strip, 
+                    p['DESCPROD'], 
+                    "=L#{c}*M#{c}", 
+                    "=L#{c}*M#{c}", 
+                    "=O#{c}", 
+                    "=M#{c}", 
+                    p['CPESANIT'].to_i == 1 ?  "=H#{c}" : p['IMPU1'] == 16.0 ? "=H#{c}*1.16" : "=H#{c}", 
+                    "=P#{c}*L#{c}", 
+                    "=O#{c}*L#{c}", 
+                    "=O#{c}*L#{c}", 
+                    "=O#{c}*L#{c}", 
+                    '', 
+                    p['ULTCOSME'], 
+                    (p['MARGENKG'] / 100), 
+                    if p['CODIGRUP'] == '001'
+                        if p['CPESANIT'].to_i == 1
+                            "=ROUND(((M#{c}/(1-N#{c}))), 2)"
+                        else
+                            if p['IMPU1'] == 16.0
+                                "=ROUND(ROUND((((M#{c}/(1-N#{c})))), 2)*1.16, 2)"
+                            else
+                                "=ROUND(ROUND((((M#{c}/(1-N#{c})))), 2), 2)"
+                            end
+                        end
+                    else
+                        if p['CPESANIT'].to_i == 1
+                            "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
+                        else
+                            if p['IMPU1'] == 16.0
+                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
+                            else
+                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)"
+                            end
+                        end
+                    end,
+                    # p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", 
+                    if p['CODIGRUP'] == '001'
+                        "=ROUND(((M#{c}/(1-N#{c}))), 2)"
+                    else
+                        "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
+                    end
+                ], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
             end
         end
 
@@ -116,4 +158,85 @@ class InventoryController < ApplicationController
         xlsx.serialize("public/#{filename}")
         send_file "public/#{filename}"
     end
+
+    def list_price_auto
+        xlsx = Axlsx::Package.new
+
+        only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        text_numeric = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 4, font_name: 'Calibri')
+
+        # Queries
+        albeca = Product.joins(:inventory).where("tinvadep.CODIDEPO": "01").where("tinvadep.CANTIDAD > 0").where(CODIGRUP: '001')
+        otros = Product.joins(:inventory).where("tinvadep.CODIDEPO": "01").where("tinvadep.CANTIDAD > 0").where.not(CODIGRUP: '001').order(:DESCPROD)
+        
+        xlsx.workbook.add_worksheet(name: "ListaAlbeca") do |sheet|
+            
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO BS", "PRECIO BS (UND)", "PRECIO DOLAR (CAJA)", "PRECIO DOLAR (UND)"], style: [text_bold, text_bold, text_bold, text_bold, text_bold, text_bold, text_bold] 
+
+            albeca.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENTAAP'], "=ROUND(#{a['VENTAAP']/a['UNIDCAJA']}, 2)", a['VENT1ME'], "=ROUND(#{a['VENT1ME']/a['UNIDCAJA']}, 2)"], style: [only_border, only_border, only_border, text_numeric, text_numeric, text_numeric, text_numeric], types: [:string, :string]
+            end
+
+            sheet.column_widths 10, 50, 10, 20, 20, 15, 15
+        end
+
+        xlsx.workbook.add_worksheet(name: "Precios BS") do |sheet|
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO BS", "PRECIO BS (UND)"], style: [text_bold, text_bold, text_bold, text_bold, text_bold] 
+
+            otros.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENTAAP'], "=ROUND(#{a['VENTAAP']/a['UNIDCAJA']}, 2)"], style: [only_border, only_border, only_border, text_numeric, text_numeric], types: [:string, :string]
+            end
+
+            sheet.column_widths 10, 50, 10, 20, 20
+        end
+
+        xlsx.workbook.add_worksheet(name: "Precios Dolar") do |sheet|
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO DOLAR (CAJA)", "PRECIO DOLAR (UND)"], style: [text_bold, text_bold, text_bold, text_bold, text_bold] 
+
+            otros.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENT1ME'], "=ROUND(#{a['VENT1ME']/a['UNIDCAJA']}, 2)"], style: [only_border, only_border, only_border, text_numeric, text_numeric], types: [:string, :string]
+            end
+
+            sheet.column_widths 10, 50, 10, 15, 15
+        end
+
+        xlsx.serialize("public/ProbadorPrecio.xlsx")
+        send_file "public/ProbadorPrecio.xlsx"
+    end 
+
+    def list_price_auto_coro
+        xlsx = Axlsx::Package.new
+
+        # Queries
+        albeca = Product.joins(:inventory).where("tinvadep.CODIDEPO": "01").where("tinvadep.CANTIDAD > 0").where(CODIGRUP: '001')
+        otros = Product.joins(:inventory).where("tinvadep.CODIDEPO": "01").where("tinvadep.CANTIDAD > 0").where.not(CODIGRUP: '001')
+        
+        xlsx.workbook.add_worksheet(name: "ListaAlbeca") do |sheet|
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO BS", "PRECIO BS (UND)", "PRECIO DOLAR (CAJA)", "PRECIO DOLAR (UND)"]
+
+            albeca.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENTAAP'], "=ROUND(#{a['VENTAAP']/a['UNIDCAJA']}, 2)", a['VENT1ME'], "=ROUND(#{a['VENT1ME']/a['UNIDCAJA']}, 2)"]
+            end
+        end
+
+        xlsx.workbook.add_worksheet(name: "Precios BS") do |sheet|
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO BS", "PRECIO BS (UND)"]
+
+            otros.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENTAAP'], "=ROUND(#{a['VENTAAP']/a['UNIDCAJA']}, 2)"]
+            end
+        end
+
+        xlsx.workbook.add_worksheet(name: "Precios Dolar") do |sheet|
+            sheet.add_row ["CODIGO", "PRODUCTO", "UNIDADES POR CAJA", "PRECIO DOLAR (CAJA)", "PRECIO DOLAR (UND)"]
+
+            otros.each do |a|
+                sheet.add_row [ a['CODIPROD'], a['DESCPROD'], a['UNIDCAJA'], a['VENT1ME'], "=ROUND(#{a['VENT1ME']/a['UNIDCAJA']}, 2)"]
+            end
+        end
+
+        xlsx.serialize("public/ProbadorPrecio.xlsx")
+        send_file "public/ProbadorPrecio.xlsx"
+    end 
 end
