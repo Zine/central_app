@@ -46,7 +46,7 @@ class InventoryController < ApplicationController
             sheet.sheet_protection.password = "central"
             #                   A       B           C               D           E           F           G           H       I           J           K       L        M        N             O                P
             sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
-            Product.where(DESACTIV: 0).all.each_with_index do |p, i|
+            Product.joins(:inventory).where(DESACTIV: 0).where('tinvadep.CANTIDAD > 0').where("tinvadep.CODIDEPO = '01'").all.each_with_index do |p, i|
                 c = i + 2
                 sheet.add_row [
                     p['CODIPROD'].strip, 
@@ -78,9 +78,9 @@ class InventoryController < ApplicationController
                             "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
                         else
                             if p['IMPU1'] == 16.0
-                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
-                            else
                                 "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)"
+                            else
+                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
                             end
                         end
                     end,
@@ -101,7 +101,7 @@ class InventoryController < ApplicationController
     def price
         xlsx = Roo::Spreadsheet.open(params[:file].tempfile)
         sheet = xlsx.sheet(0)
-        sheet.each_with_index(code: 'CODIGO', name: 'NOMBRE', cost: 'ULTIMOCOSTO', base: 'PRECIOBASE', dolarv: 'PRECIOME', dolarc: 'COSTOME', pricea: 'PRECIOA', priceb: 'PRECIOB', pricec: 'PRECIOC', priced: 'PRECIOD', pricee: 'PRECIOE') do |h, i|
+        sheet.each_with_index(code: 'CODIGO', name: 'NOMBRE', util: 'UTILIDAD', cost: 'ULTIMOCOSTO', base: 'PRECIOBASE', dolarv: 'PRECIOME', dolarc: 'COSTOME', pricea: 'PRECIOA', priceb: 'PRECIOB', pricec: 'PRECIOC', priced: 'PRECIOD', pricee: 'PRECIOE') do |h, i|
             if i > 0 
                 change_price(h)
             end

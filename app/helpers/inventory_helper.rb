@@ -44,6 +44,7 @@ module InventoryHelper
         product.VENTACP = hash[:pricec].round(4)
         product.VENTADP = hash[:priced].round(4)
         product.VENTAEP = hash[:pricee].round(4)
+        product.MARGENKG = hash[:util].round(2) * 100
         if product.save
             puts "#{product.DESCPROD} guardado"
         else
