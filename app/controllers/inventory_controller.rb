@@ -63,25 +63,13 @@ class InventoryController < ApplicationController
                     '', 
                     p['ULTCOSME'], 
                     (p['MARGENKG'] / 100), 
-                    if p['CODIGRUP'] == '001'
-                        if p['CPESANIT'].to_i == 1
-                            "=ROUND(((M#{c}/(1-N#{c}))), 2)"
-                        else
-                            if p['IMPU1'] == 16.0
-                                "=ROUND(ROUND((((M#{c}/(1-N#{c})))), 2)*1.16, 2)"
-                            else
-                                "=ROUND(ROUND((((M#{c}/(1-N#{c})))), 2), 2)"
-                            end
-                        end
+                    if p['CPESANIT'].to_i == 1
+                        "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
                     else
-                        if p['CPESANIT'].to_i == 1
-                            "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
+                        if p['IMPU1'] == 16.0
+                            "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)"
                         else
-                            if p['IMPU1'] == 16.0
-                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)"
-                            else
-                                "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
-                            end
+                            "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
                         end
                     end,
                     # p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", 
