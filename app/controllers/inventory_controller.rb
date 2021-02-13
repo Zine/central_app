@@ -73,11 +73,7 @@ class InventoryController < ApplicationController
                         end
                     end,
                     # p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", 
-                    if p['CODIGRUP'] == '001'
-                        "=ROUND(((M#{c}/(1-N#{c}))), 2)"
-                    else
-                        "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
-                    end
+                    "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
                 ], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
             end
         end
