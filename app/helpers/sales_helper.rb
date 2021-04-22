@@ -1,6 +1,21 @@
 module SalesHelper
   def sales_zero(route, from, to)
-    sql = "CALL ventas_0('#{route}', '#{from}', '#{to}')"
+    # sql = "CALL ventas_0('#{route}', '#{from}', '#{to}')"
+    sql = <<-SQL
+      SELECT#{'  '}
+        tcpcarut.CODICLIE AS Codigo,
+        TRIM(tcpca.RAZOSOCI) AS Cliente
+      FROM tcpcarut
+        INNER JOIN tcpca ON tcpcarut.CODICLIE = tcpca.CODICLIE
+      WHERE tcpcarut.DESACTIV = 0
+        AND tcpcarut.CODIRUTA IN ('#{route}')
+        AND tcpcarut.CODICLIE NOT IN (
+                                  SELECT tfachisa.CODICLIE
+                                    FROM tfachisa
+                                  WHERE tfachisa.FECHA#{' '}
+                                  BETWEEN '#{from}' AND '#{to}' AND tfachisa.CODIRUTA IN ('#{route}')
+                                );
+    SQL
     ActiveRecord::Base.connection.exec_query(sql)
   end
 
