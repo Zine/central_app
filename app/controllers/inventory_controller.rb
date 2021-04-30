@@ -146,7 +146,7 @@ class InventoryController < ApplicationController
                     d['PrecioDolarFullUnidades'] * 0.95, 
                     d['PrecioDolarFull'] * 0.96, 
                     d['PrecioDolarFullUnidades'] * 0.96
-                ], style: [only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :float, :float, :float, :float, :float, :float, :float, :float]
+                ], style: [only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :string, :float, :float, :float, :float, :float, :float, :float, :float]
             end
 
             sheet.column_widths 10, 45, 11, 25, 14, 16, 9, 14, 12, 18 
