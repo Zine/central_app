@@ -131,12 +131,13 @@ class InventoryController < ApplicationController
         filename = "Lista_#{d.day}_#{d.month}.xlsx"
 
         xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
-            sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'DOLAR', 'DOLAR (UND)', 'DOLAR - 8%', 'DOLAR - 8% (UND)', 'DOLAR - 5%', 'DOLAR - 5% (UND)', 'DOLAR - 4%', 'DOLAR - 4% (UND)'], style: header_bold
+            sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'CODIGO BARRA', 'DOLAR', 'DOLAR (UND)', 'DOLAR - 8%', 'DOLAR - 8% (UND)', 'DOLAR - 5%', 'DOLAR - 5% (UND)', 'DOLAR - 4%', 'DOLAR - 4% (UND)'], style: header_bold
             price_list_data.each do |d|
                 sheet.add_row [
                     d['Codigo'], 
                     d['Producto'], 
                     d['Unidades'], 
+                    d['Barra'],
                     d['PrecioDolarFull'], 
                     d['PrecioDolarFullUnidades'], 
                     d['PrecioDolarFull'] * 0.92, 
@@ -145,10 +146,10 @@ class InventoryController < ApplicationController
                     d['PrecioDolarFullUnidades'] * 0.95, 
                     d['PrecioDolarFull'] * 0.96, 
                     d['PrecioDolarFullUnidades'] * 0.96
-                ], style: [only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :float, :float, :float, :float, :float, :float, :float, :float]
+                ], style: [only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :float, :float, :float, :float, :float, :float, :float, :float]
             end
 
-            sheet.column_widths 10, 45, 11, 14, 16, 9, 14, 12, 18 
+            sheet.column_widths 10, 45, 11, 25, 14, 16, 9, 14, 12, 18 
         end
 
         xlsx.serialize("public/#{filename}")
