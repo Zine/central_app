@@ -45,36 +45,35 @@ class InventoryController < ApplicationController
         xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
             sheet.sheet_protection.password = "central"
             #                   A       B           C               D           E           F           G           H       I           J           K       L        M        N             O                P
-            sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'TASA', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
+            sheet.add_row ['CODIGO', 'NOMBRE', 'ULTIMOCOSTO', 'PRECIOBASE', 'PRECIOME', 'COSTOME', 'PRECIOA', 'PRECIOB', 'PRECIOC', 'PRECIOD', 'PRECIOE', 'COSTO', 'UTILIDAD', 'PRECIOPARAGUANA', 'PRECIOCORO'], style: [text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked, text_bold_locked]
             Product.joins(:inventory).where(DESACTIV: 0).where('tinvadep.CANTIDAD > 0').where("tinvadep.CODIDEPO = '01'").all.each_with_index do |p, i|
                 c = i + 2
                 sheet.add_row [
                     p['CODIPROD'].strip, 
                     p['DESCPROD'], 
-                    "=L#{c}*M#{c}", 
-                    "=L#{c}*M#{c}", 
+                    "=L#{c}", 
+                    "=L#{c}", 
                     "=O#{c}", 
                     "=M#{c}", 
                     p['CPESANIT'].to_i == 1 ?  "=H#{c}" : p['IMPU1'] == 16.0 ? "=H#{c}*1.16" : "=H#{c}", 
-                    "=P#{c}*L#{c}", 
-                    "=O#{c}*L#{c}", 
-                    "=O#{c}*L#{c}", 
-                    "=O#{c}*L#{c}", 
-                    '', 
+                    "=O#{c}", 
+                    "=N#{c}", 
+                    "=N#{c}", 
+                    "=N#{c}", 
                     p['ULTCOSME'], 
-                    (p['MARGENKG'] / 100), 
+                    (p['MARGENKG']), 
                     if p['CPESANIT'].to_i == 1
-                        "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
+                        "=ROUND((L#{c}/((100-M#{c})/100)), 2)"
                     else
                         if p['IMPU1'] == 16.0
-                            "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)"
+                            "=ROUND(ROUND(((L#{c}/((100-M#{c})/100))), 2)*1.16, 2)"
                         else
-                            "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2), 2)"
+                            "=ROUND(ROUND(((L#{c}/((100-M#{c})/100))), 2), 2)"
                         end
                     end,
-                    # p['IMPU1'] == 16.0 ? "=ROUND(ROUND((((M#{c}/(1-N#{c}))/.95)), 2)*1.16, 2)" : "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)", 
-                    "=ROUND(((M#{c}/(1-N#{c}))/.95), 2)"
-                ], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked, number_format_unlocked], types: [:string, :string]
+                    # p['IMPU1'] == 16.0 ? "=ROUND(ROUND(((M#{c}/(1-N#{c}))), 2)*1.16, 2)" : "=ROUND((M#{c}/(1-N#{c})), 2)", 
+                    "=ROUND((L#{c}/((100-M#{c})/100)), 2)"
+                ], style: [only_border_locked, only_border_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_unlocked, number_format_locked, number_format_locked, number_format_locked, number_format_locked, number_format_locked], types: [:string, :string]
             end
         end
 
@@ -103,14 +102,23 @@ class InventoryController < ApplicationController
 
 
         xlsx.workbook.add_worksheet(name: "Probador") do |sheet|
-            #                  A        B         C        D          E        F       G         H           I
-            sheet.add_row ['CODIGO', 'NOMBRE', 'TASA', 'UTILIDAD', 'COSTO', 'ME A', 'ME B', 'PRECIO A', 'PRECIO B',], style: text_bold
-            Product.where(DESACTIV: 0).all.each_with_index do |p, i|
+            #                  A        B         C        D          E        F  
+            sheet.add_row ['CODIGO', 'NOMBRE', 'UTILIDAD', 'COSTO', 'ME A', 'ME B'], style: text_bold
+            Product.where(DESACTIV: 0).each_with_index do |p, i|
                 c = i + 2
-                sheet.add_row [p['CODIPROD'].strip, p['DESCPROD'].strip, '', p['MARGENKG'], p['ULTCOSME'], p['IMPU1'] == 16.0 ? "=IFERROR(ROUND(ROUND((((E#{c}/((1-(D#{c}/100))))/.95)), 2)*1.16, 2), 0)" : "=IFERROR(ROUND(((E#{c}/((1-(D#{c}/100))))/.95), 2), 0)", "=IFERROR(ROUND(((E#{c}/((1-(D#{c}/100))))/.95), 2), 0)", "=C#{c}*F#{c}", "=C#{c}*G#{c}" ], style: [ only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
-            end
+                sheet.add_row [
+                    p['CODIPROD'].strip, 
+                    p['DESCPROD'].strip,
+                    p['MARGENKG'], 
+                    p['ULTCOSME'], 
+                    p['CPESANIT'] == ' ' ? 
+                        "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100))))*1.16, 2), 0)": 
+                        "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)",
+                    "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)",
+                    "=C#{c}*F#{c}", "=C#{c}*G#{c}" ], 
+                    style: [ only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
         end
-
+    end
         xlsx.serialize("public/ProbadorPrecio.xlsx")
         send_file "public/ProbadorPrecio.xlsx"
     end
@@ -149,12 +157,13 @@ class InventoryController < ApplicationController
                 ], style: [only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :string, :float, :float, :float, :float, :float, :float, :float, :float]
             end
 
-            sheet.column_widths 10, 45, 11, 25, 14, 16, 9, 14, 12, 18 
+            sheet.column_widths 10, 45, 11, 25, 14, 16, 9, 14, 12, 18
         end
 
         xlsx.serialize("public/#{filename}")
         send_file "public/#{filename}"
     end
+
 
     def list_price_auto
         xlsx = Axlsx::Package.new
