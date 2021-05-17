@@ -54,7 +54,7 @@ class InventoryController < ApplicationController
                     "=L#{c}", 
                     "=L#{c}", 
                     "=O#{c}", 
-                    "=M#{c}", 
+                    "=L#{c}", 
                     p['CPESANIT'].to_i == 1 ?  "=H#{c}" : p['IMPU1'] == 16.0 ? "=H#{c}*1.16" : "=H#{c}", 
                     "=O#{c}", 
                     "=N#{c}", 
