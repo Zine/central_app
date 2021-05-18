@@ -111,9 +111,15 @@ class InventoryController < ApplicationController
                     p['DESCPROD'].strip,
                     p['MARGENKG'], 
                     p['ULTCOSME'], 
-                    p['CPESANIT'] == ' ' ? 
-                        "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100))))*1.16, 2), 0)": 
-                        "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)",
+                    if p['CPESANIT'].to_i == 1
+                        "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)"
+                            else
+                                if p['IMPU1'] == 16.0
+                                    "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100))))*1.16, 2), 0)"
+                                else
+                                    "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)"
+                                end
+                            end,
                     "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)",
                     "=C#{c}*F#{c}", "=C#{c}*G#{c}" ], 
                     style: [ only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
