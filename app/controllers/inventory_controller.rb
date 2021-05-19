@@ -103,12 +103,17 @@ class InventoryController < ApplicationController
 
         xlsx.workbook.add_worksheet(name: "Probador") do |sheet|
             #                  A        B         C        D          E        F  
-            sheet.add_row ['CODIGO', 'NOMBRE', 'UTILIDAD', 'COSTO', 'ME A', 'ME B'], style: text_bold
+            sheet.add_row ['CODIGO', 'NOMBRE', 'UND. X CAJA', 'PROVEEDOR', 'EXISTENCIA', 'UTILIDAD', 'COSTO', 'ME A', 'ME B'], style: text_bold
             Product.where(DESACTIV: 0).each_with_index do |p, i|
+                inventory = Inventory.where(CODIPROD: p['CODIPROD'].strip, CODIDEPO: '01').first
+
                 c = i + 2
                 sheet.add_row [
                     p['CODIPROD'].strip, 
                     p['DESCPROD'].strip,
+                    p['UNIDCAJA'].to_i,
+                    Supplier.find(p['CODIGRUP'].strip).DESCGRUP.strip,
+                    inventory.nil? ? 0 : inventory.CANTIDAD / p['UNIDCAJA'],
                     p['MARGENKG'], 
                     p['ULTCOSME'], 
                     if p['CPESANIT'].to_i == 1
@@ -122,7 +127,7 @@ class InventoryController < ApplicationController
                             end,
                     "=IFERROR(ROUND((D#{c}/((1-(C#{c}/100)))), 2), 0)",
                     "=C#{c}*F#{c}", "=C#{c}*G#{c}" ], 
-                    style: [ only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
+                    style: [ only_border, only_border, number_format, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string]
         end
     end
         xlsx.serialize("public/ProbadorPrecio.xlsx")
