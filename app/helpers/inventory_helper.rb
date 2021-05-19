@@ -7,6 +7,13 @@ module InventoryHelper
         records
     end
 
+    def price_list_coro_data
+        sql = "CALL get_price_list_coro()"
+        records = ActiveRecord::Base.connection.exec_query(sql)
+        ActiveRecord::Base.clear_active_connections!
+        records
+    end
+
     def calculate_ult_cost_por(cost, price) 
         (((price/cost) * 100) - 100)
     end

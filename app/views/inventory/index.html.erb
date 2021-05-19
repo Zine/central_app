@@ -11,6 +11,14 @@
             </div>
           </div>
         <% end %>
+                <%= form_with(url: "/inventory/list_price_coro", local: true, method: :get) do |f| %>
+          <div class="field">
+            <%= f.label("", "Descargar lista de precio (coro)", class: "label") %>
+            <div class="control">
+              <%= f.submit("Descargar", data: { disable_with: false }, class: "button is-text") %>
+            </div>
+          </div>
+        <% end %>
       </br>
     </div>
   </div>

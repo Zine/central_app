@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get '/sales/report_sales_daily', to: 'sales#report_sales_daily'
   get '/inventory/list_price_new', to: 'inventory#load_list_price_new'
   get '/inventory/list_price', to: 'inventory#list_price'
+  get '/inventory/list_price_coro', to:'inventory#list_price_coro_xlsx'
   get '/inventory/test_price', to: 'inventory#test_price_xlsx'
   get '/sales/sku', to: 'sales#sku_view'
   get '/debts/report', to: 'debts#report_debts'
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
   post '/sales/sku', to: 'sales#sku'
   post '/inventory/price', to: 'inventory#price'
   post '/inventory/list_price', to: 'inventory#list_price_xlsx'
+  post '/inventory/list_price_coro', to: 'inventory#list_price_coro_xlsx'
   post '/debts', to: 'debts#show'
   post '/debts/report', to: 'debts#generate_report_debts'
 end

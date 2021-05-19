@@ -142,7 +142,7 @@ class InventoryController < ApplicationController
         number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 4, font_name: 'Calibri')
 
         d = Date.today
-        filename = "Lista_#{d.day}_#{d.month}.xlsx"
+        filename = "Lista_Pgna_#{d.day}_#{d.month}_#{d.year}.xlsx"
 
         xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
             sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'CODIGO BARRA', 'DOLAR', 'DOLAR (UND)', 'DOLAR - 8%', 'DOLAR - 8% (UND)', 'DOLAR - 5%', 'DOLAR - 5% (UND)', 'DOLAR - 4%', 'DOLAR - 4% (UND)'], style: header_bold
@@ -251,4 +251,43 @@ class InventoryController < ApplicationController
         xlsx.serialize("public/ProbadorPrecio.xlsx")
         send_file "public/ProbadorPrecio.xlsx"
     end 
+
+    def list_price_coro_xlsx
+        xlsx = Axlsx::Package.new
+
+        header_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri', alignment: { horizontal: :center })
+        
+        only_border = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        text_bold = xlsx.workbook.styles.add_style(b: true, border: Axlsx::STYLE_THIN_BORDER, font_name: 'Calibri')
+        number_format = xlsx.workbook.styles.add_style(border: Axlsx::STYLE_THIN_BORDER, num_fmt: 4, font_name: 'Calibri')
+
+        d = Date.today
+        filename = "Lista_Coro_#{d.day}_#{d.month}.xlsx"
+
+        xlsx.workbook.add_worksheet(name: "Listado") do |sheet|
+            sheet.add_row ['CODIGO', 'PRODUCTO', 'UNIDADES', 'CODIGO BARRA', 'DOLAR', 'DOLAR (UND)', 'DOLAR - 8%', 'DOLAR - 8% (UND)', 'DOLAR - 5%', 'DOLAR - 5% (UND)', 'DOLAR - 4%', 'DOLAR - 4% (UND)'], style: header_bold
+            price_list_coro_data.each do |d|
+                sheet.add_row [
+                    d['Codigo'], 
+                    d['Producto'], 
+                    d['Unidades'], 
+                    d['Barra'],
+                    d['PrecioDolarFull'], 
+                    d['PrecioDolarFullUnidades'], 
+                    d['PrecioDolarFull'] * 0.92, 
+                    d['PrecioDolarFullUnidades'] * 0.92, 
+                    d['PrecioDolarFull'] * 0.95, 
+                    d['PrecioDolarFullUnidades'] * 0.95, 
+                    d['PrecioDolarFull'] * 0.96, 
+                    d['PrecioDolarFullUnidades'] * 0.96
+                ], style: [only_border, only_border, only_border, only_border, number_format, number_format, number_format, number_format, number_format, number_format, number_format, number_format], types: [:string, :string, :integer, :string, :float, :float, :float, :float, :float, :float, :float, :float]
+            end
+
+            sheet.column_widths 10, 45, 11, 25, 14, 16, 9, 14, 12, 18
+        end
+
+        xlsx.serialize("public/#{filename}")
+        send_file "public/#{filename}"
+    end
+
 end
